@@ -7,7 +7,7 @@ Internet connection
 Required Libraries:
 google-generativeai, pywhatkit, subprocess, pyttsx3, SpeechRecognition (import speech_recognition, pyperclip, playsound3, ttkbootstrap, pycaw
 
-!!! The usage instructions are in 'documentation' folder or in readme.docx file!!!
+!!! The usage instructions are in readme.docx file!!!
 
 In order to make the file run along with the system setup (uploading to startup folder):
 1.	Press Win + R
