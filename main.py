@@ -2,13 +2,11 @@ import subprocess
 import pyttsx3
 import speech_recognition as sr
 import datetime
-import wikipedia
-import webbrowser
 import os
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.by import By
-from selenium.common.exceptions import NoSuchElementException
+# from selenium import webdriver
+# from selenium.webdriver.chrome.options import Options
+# from selenium.webdriver.common.by import By
+# from selenium.common.exceptions import NoSuchElementException
 import time
 import pywhatkit
 import pathlib
@@ -177,31 +175,31 @@ def extract_number(number_words):
 def is_cyrillic(text):
 	return bool(re.search(r'[а-яА-ЯёЁ]', text))
 
-def google_search_selenium(query):
+# def google_search_selenium(query):
     
-  try:
-    chrome_options = Options()
-    chrome_options.add_argument("--headless")
-    chrome_options.add_argument("--no-sandbox")
+#   try:
+#     chrome_options = Options()
+#     chrome_options.add_argument("--headless")
+#     chrome_options.add_argument("--no-sandbox")
 
-    driver = webdriver.Chrome(options=chrome_options) 
-    driver.get(f"https://www.google.com/search?q={query}")
+#     driver = webdriver.Chrome(options=chrome_options) 
+#     driver.get(f"https://www.google.com/search?q={query}")
 
-    driver.implicitly_wait(10)
-    result_link = driver.find_element(By.CSS_SELECTOR, '.yuRUbf a').get_attribute('href') 
+#     driver.implicitly_wait(10)
+#     result_link = driver.find_element(By.CSS_SELECTOR, '.yuRUbf a').get_attribute('href') 
 
-    if result_link.startswith("/url?q="):
-      result_link = result_link.split("/url?q=")[1].split("&sa=U")[0]
+#     if result_link.startswith("/url?q="):
+#       result_link = result_link.split("/url?q=")[1].split("&sa=U")[0]
 
-    driver.quit()
-    return result_link
+#     driver.quit()
+#     return result_link
 
-  except NoSuchElementException:
-    print(f"No search results found for '{query}'.")
-    return None
-  except Exception as e:
-    print(f"An error occurred: {e}")
-    return None
+#   except NoSuchElementException:
+#     print(f"No search results found for '{query}'.")
+#     return None
+#   except Exception as e:
+#     print(f"An error occurred: {e}")
+#     return None
 
 def adjust_volume(difference):
     devices = AudioUtilities.GetSpeakers()
@@ -386,7 +384,6 @@ def scroll():
 def change_lang_en():
 	global speaker_lang
 	if check_keyword('russian'):
-		wikipedia.set_lang("ru")
 		speaker_lang = 'ru'
 		engine.setProperty('voice', voices[0].id)
 		speak_phrase('change_lang')
@@ -396,7 +393,6 @@ def change_lang_en():
 def change_lang_ru():
 	global speaker_lang
 	if check_keyword('english'):
-		wikipedia.set_lang("en")
 		speaker_lang = 'en'
 		engine.setProperty('voice', voices[1].id)
 		speak_phrase('change_lang')
@@ -546,14 +542,6 @@ def who_ru():
 def tell_about_yourself():
 	speak_phrase('tell_about_yourself')
 
-def web_search():
-	query = remove_keyword('search')
-	try:
-		webbrowser.open(google_search_selenium(query))
-		speak_phrase('results_found')
-	except:
-		speak_phrase('no_results_found')
-
 def play_yt():
 	query = remove_keyword('play')
 	pywhatkit.playonyt(query)
@@ -575,8 +563,7 @@ def record_vm():
     time.sleep(0.5)
     pyautogui.moveTo(drag_x, drag_y, duration=0.2)
     pyautogui.mouseUp()
-
-def send_vm():
+    time.sleep(5)
     record_btn_x, record_btn_y = 1895, 1020
     pyautogui.click(record_btn_x, record_btn_y)
 
@@ -899,9 +886,7 @@ query_keywords = {
 	'take_screenshot': ['take screenshot', 'take a screenshot', 'display screenshot', 'screenshot the display', 'сделай скриншот', "скриншот экрана", "скрин экрана", "сделать скриншот", "skrinshot qilish",
                     'skrinchot qilish', 'ekran skrinshot', 'ekran skrinchot', 'skrinshod', take_screenshot],
  
-    'record_vm': ['start voice message', 'record voice message', 'запиши голосовое сообщение', 'записать голосовое сообщение', record_vm],
-    
-    'send_vm': ['send voice message', 'finish voice message', send_vm],
+    'record_vm': ['start voice message', 'record voice message', 'voice message', 'запиши голосовое сообщение', 'записать голосовое сообщение', record_vm],
 
 	'turn_off': ['turn off system', 'shut down system', "отключи систему", "завершить работу системы", "заверши работу системы", 'tizimni ochirish', 'tizimni ochir', 
               'tizim ochirilsin', turn_off],
@@ -945,7 +930,8 @@ if __name__ == '__main__':
                             else:
                                 pass
                         if not keyword_exists:
-                            gemini_search()
+                            speak_phrase('error')
+                        #     gemini_search()
             else:
                 continue
     
