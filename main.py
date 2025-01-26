@@ -138,7 +138,6 @@ def takeCommand():
 		print("Listening...")
 		r.pause_threshold = 1
 		audio = r.listen(source)
-	sample_rate = audio.sample_rate
 	try:
 		print("Recognizing...")
 		if speaker_lang == 'en':
@@ -538,6 +537,7 @@ def chat_control():
 
 def who_ru():
 	speak_phrase('who_ru')
+	add_message(text=phrases['who_ru'][lang_idx], sender='ai')
 
 def tell_about_yourself():
 	speak_phrase('tell_about_yourself')
@@ -593,8 +593,9 @@ def gemini_search():
     global model
     query = remove_keyword('gemini')
     response = model.generate_content(query)
-    add_message(text=response.text, sender='ai')
-    speak(response.text)
+    answer = ' '.join(re.split(r'(?<=[.!?])\s+', response.text)[:3]).replace('*', '')
+    add_message(text=answer, sender='ai')
+    speak(answer)
 
 #lists_dicionaries
 
@@ -875,7 +876,7 @@ query_keywords = {
 	'space': ['space', 'пробел', 'joy tashla', 'probel', press_space],
 	'esc': ['esc', 'esk', 'ask', 'escape', 'эскейп', 'ескейп', 'эскей', 'ескей', 's key', 'eskeyp', press_esc],
 	'minus': ['minus', 'dash', 'hyphens', 'substract', 'плюс', 'вычесть', 'отнять', 'ayiruv', 'ayiramiz', 'defiz', 'chiziqcha', 'chiziq', press_minus],
-    'translator': ['run translator', 'open translator', 'google translate', 'запустить переводчик', "запустить гугл переводчик", "открой переводчик", "открыть переводчик",
+    'translator': ['translator', 'open translator', 'google translate', 'запустить переводчик', "запустить гугл переводчик", "открой переводчик", "открыть переводчик",
                    "зупусти переводчик", run_translator],
 
 	'volume_up': ['increase volume', 'volume up', 'увеличить звук', "усилить звук", "приумножить звук", "прибавить звук", "ovozni kotarish", "ovozni kopaytir", 'ovozni oshir',
@@ -899,6 +900,7 @@ query_keywords = {
 	'common_words': ['please', 'пожалуйста', "плиз", "плис", "ассистент", "assistent", "asistent", "yordamchi", just_pass],
 	'paste': ['paste', 'вставить', "вставка", 'qoyish', paste]
 }
+
 
 if __name__ == '__main__':
     def backgroundTasks():
